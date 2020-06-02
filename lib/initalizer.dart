@@ -8,12 +8,17 @@ import 'dart:convert';
 
 class UiVariables extends ChangeNotifier {
   WebViewController controller;
+  bool pageLoaded = false;
   int bottomNavigationBarIndex = 0;
   Box bookmarks;
-  var allBookmarks;
+  List allBookmarks;
   var date;
   String currentUrl, title;
 
+  void setPageLoaded(value) {
+    pageLoaded = value;
+    notifyListeners();
+  }
 
   void initializeApp() async{
     final Directory _appDocDir = await getApplicationDocumentsDirectory();
@@ -23,27 +28,33 @@ class UiVariables extends ChangeNotifier {
   }
 
   void saveBookmark() async{
-
 //    bookmarks.delete('all');
     String info = await bookmarks.get('all', defaultValue: '');
 
     dynamic data = info.split('@#');
     print(data);
-    info += '@#$currentUrl $title';
+    info += '@#$currentUrl!@$title';
     print(info);
     bookmarks.put('all', info);
+    var items = bookmarks.get('all', defaultValue: '');
+    allBookmarks = items.split('@#');
     notifyListeners();
   }
 
-  void getBookmarks() async{
-    final Directory _appDocDir = await getApplicationDocumentsDirectory();
-    Hive.init(_appDocDir.path);
-    print(_appDocDir.path);
-    bookmarks = await Hive.openBox('bookmarks');
-    print(bookmarks);
+
+  void getBookmarks() {
     var items = bookmarks.get('all', defaultValue: '');
     allBookmarks = items.split('@#');
+    pageLoaded = true;
+    notifyListeners();
+  }
 
+  void deleteBookmark(index) async{
+    var items = bookmarks.get('all', defaultValue: '');
+    allBookmarks = items.split('@#');
+    allBookmarks.removeAt(index);
+    bookmarks.put('all', allBookmarks.join('@#'));
+    print('Deleted Bookmark');
     notifyListeners();
   }
 
