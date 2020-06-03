@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import '../bookmarks.dart';
 
-void bottomNavigationBarTap(uiVariables,currentIndex) {
+void bottomNavigationBarTap(uiVariables,currentIndex, context) {
+  var oldIndex = uiVariables.bottomNavigationBarIndex;
+  uiVariables.setBottomNavigationBarIndex(currentIndex);
   if (currentIndex == 0) {
-    uiVariables.setBottomNavigationBarIndex(currentIndex);
     uiVariables.controller.loadUrl('https://w3schools.com');
-  } else if (currentIndex == 1 && uiVariables.bottomNavigationBarIndex == 0) {
+  } else if (currentIndex == 1 && oldIndex != 2) {
     uiVariables.controller.evaluateJavascript('''
     var searchButton = document.querySelector("[title='Search W3Schools']");
     searchButton.click();
     ''');
   } else if (currentIndex == 2) {
-    uiVariables.setBottomNavigationBarIndex(currentIndex);
+
   }
 
 }
@@ -22,7 +22,7 @@ BottomNavigationBar bottomNavigationBar(uiVariables, context) {
     selectedItemColor: Colors.blue,
     currentIndex: uiVariables.bottomNavigationBarIndex,
     onTap: (index) {
-      bottomNavigationBarTap(uiVariables, index);
+      bottomNavigationBarTap(uiVariables, index, context);
     },
     items: [
       BottomNavigationBarItem(

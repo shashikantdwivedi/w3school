@@ -3,39 +3,57 @@ import 'package:flutter/material.dart';
 import 'components/bottom_navigation_bar.dart' as bottom_bar;
 import 'package:provider/provider.dart';
 import 'initalizer.dart';
+import 'database.dart' as db;
 
 class Bookmarks extends StatefulWidget {
-  Bookmarks({Key key}) : super(key: key);
+  db.Database dbInstance;
+
+  Bookmarks(this.dbInstance, {Key key}) : super(key: key);
 
   @override
-  _BookmarksState createState() => _BookmarksState();
+  _BookmarksState createState() => _BookmarksState(dbInstance);
 }
 
 class _BookmarksState extends State<Bookmarks> {
+  _BookmarksState(this.dbInstance);
+
   List values;
   List allBookmarks;
+  db.Database dbInstance;
 
-  Dismissible bookmark(values, index, uiVariables) {
+  @override
+  void initState() {
+    allBookmarks = dbInstance.allBookmarks;
+  }
+
+  Dismissible bookmark(values, index) {
     return Dismissible(
         key: Key(index.toString()),
         direction: DismissDirection.endToStart,
         background: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
-            Padding(
-              padding: EdgeInsets.all(5),
+            Expanded(child: Container(color: Colors.red[300])),
+            Container(
+              height: Size.infinite.height,
+              color: Colors.red[300],
+              padding: EdgeInsets.all(5.0),
               child: IconButton(
                 onPressed: null,
-                icon: Icon(Icons.delete, color: Colors.red, size: 20,),
+                icon: Icon(
+                  Icons.delete,
+                  color: Colors.white,
+                  size: 20,
+                ),
               ),
             )
           ],
         ),
         onDismissed: (direction) {
           print('Tile Deleted');
-          uiVariables.deleteBookmark(index);
+          dbInstance.deleteBookmark(index);
           setState(() {
-            allBookmarks.removeAt(index);
+            allBookmarks = allBookmarks.removeAt(index);
           });
           print(allBookmarks);
         },
@@ -69,31 +87,21 @@ class _BookmarksState extends State<Bookmarks> {
   @override
   Widget build(BuildContext context) {
     final uiVariables = Provider.of<UiVariables>(context);
-    uiVariables.getBookmarks();
-    allBookmarks = uiVariables.allBookmarks;
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.green,
-          title: Text('Bookmarks'),
-        ),
-        body: ListView.separated(
-            separatorBuilder: (BuildContext context, int index) {
-              return Container(
-                height: 1,
-                color: Colors.grey[200],
-              );
-            },
-            itemCount: allBookmarks.length,
-            itemBuilder: (BuildContext context, int index) {
-              print(allBookmarks);
-              if (allBookmarks[index] != '') {
-                values = allBookmarks[index].split('!@');
-                return bookmark(values, index, uiVariables);
-              }
-              return Container();
-            }),
-      ),
-    );
+    return ListView.separated(
+        separatorBuilder: (BuildContext context, int index) {
+          return Container(
+            height: 1,
+            color: Colors.grey[200],
+          );
+        },
+        itemCount: allBookmarks.length,
+        itemBuilder: (BuildContext context, int index) {
+          print(allBookmarks);
+          if (allBookmarks[index] != '') {
+            values = allBookmarks[index].split('!@');
+            return bookmark(values, index);
+          }
+          return Container();
+        });
   }
 }
