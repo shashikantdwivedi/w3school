@@ -1,16 +1,75 @@
-# w3schoolapp
+<!-- PROJECT SHIELDS -->
+<!--
+*** I'm using markdown "reference style" links for readability.
+*** Reference links are enclosed in brackets [ ] instead of parentheses ( ).
+*** See the bottom of this document for the declaration of the reference variables
+*** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
+*** https://www.markdownguide.org/basic-syntax/#reference-style-links
+-->
 
-A application for a popular website w3school.com
+![](https://img.shields.io/github/issues/shashikantdwivedi/w3school) ![](https://img.shields.io/github/forks/shashikantdwivedi/w3school) ![](https://img.shields.io/github/stars/shashikantdwivedi/w3school) ![](https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Fgithub.com%2Fshashikantdwivedi%2Fw3school)
 
-## Getting Started
+<!-- PROJECT LOGO -->
+<br />
 
-This project is a starting point for a Flutter application.
+<p align="center">
+  <a href="https://github.com/shashikantdwivedi/w3school">
+    <img src="README/logo.png" alt="Logo" width="100" height="100">
+  </a>
 
-A few resources to get you started if this is your first Flutter project:
+  <h3 align="center">W3Schools Unofficial Android Application</h3>
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+
+
+
+<!-- TABLE OF CONTENTS -->
+## Table of Contents
+
+* [About the Project](#about-the-project)
+  * [Built With](#built-with)
+* [Contact](#contact)
+* [Acknowledgements](#acknowledgements)
+
+
+
+<!-- ABOUT THE PROJECT -->
+## About The Project
+
+![ss1](README/ss1.jpg)
+
+![](README/ss2.jpg)
+
+This is the unofficial app for the most popular website to learn web development [w3schools](https://w3schools.com/).
+
+##### Features
+
+1. Ad Free
+2. Bookmarks
+
+### Built With
+* [Dart](https://dart.dev)
+* [Flutter](https://flutter.dev)
+
+
+
+<!-- CONTACT -->
+
+## Contact
+
+Shashikant Dwivedi - [@ytheskd1999](https://twitter.com/theskd1999) - shashikant@shashikantdwivedi.com
+
+Project Link: [w3schools](https://github.com/shashikantdwivedi/w3school)
+
+
+
+<!-- ACKNOWLEDGEMENTS -->
+## Acknowledgements
+* [webview_flutter](https://pub.dev/packages/webview_flutter)
+* [provider](https://pub.dev/packages/provider)
+* [hive](https://pub.dev/packages/hive)
+* [hive_flutter](https://pub.dev/packages/hive_flutter)
+* [path_provider](https://pub.dev/packages/path_provider)
+* [intl](https://pub.dev/packages/intl)
+* [data_connection_checker](https://pub.dev/packages/data_connection_checker)
+* [hive_generator](https://pub.dev/packages/hive_generator)
