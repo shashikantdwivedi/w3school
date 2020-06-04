@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:w3schoolapp/no_internet.dart';
 import 'bookmarks.dart';
 import 'database.dart' as db;
 import 'initalizer.dart';
 import 'components/bottom_navigation_bar.dart' as bottom_bar;
 import 'screens/home_screens/webview_screen.dart';
+import 'package:data_connection_checker/data_connection_checker.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -17,6 +19,14 @@ class _HomePage extends State<HomePage> {
   final homeScreenKey = GlobalKey<ScaffoldState>();
   db.Database dbInstance;
   bool isBookmarked = false;
+  var internetStatus = true;
+
+  checkInternetConnection() async {
+    bool result = await DataConnectionChecker().hasConnection;
+    setState(() {
+      internetStatus = result;
+    });
+  }
 
   @override
   void initState() {
@@ -24,13 +34,14 @@ class _HomePage extends State<HomePage> {
     dbInstance = db.Database();
     dbInstance.initializeDb().whenComplete(() => dbInstance.getBookmarks());
     print(dbInstance.allBookmarks);
+    checkInternetConnection();
   }
 
-  Widget getScreen(index) {
-    if (index == 0 || index == 1) {
+  Widget getScreen(uiVariables) {
+    if (uiVariables.bottomNavigationBarIndex == 0 || uiVariables.bottomNavigationBarIndex == 1) {
       return WebViewScreen();
-    } else if (index == 2) {
-      return Bookmarks(dbInstance);
+    } else if (uiVariables.bottomNavigationBarIndex == 2) {
+      return Bookmarks(dbInstance, uiVariables);
     }
   }
 
@@ -40,19 +51,34 @@ class _HomePage extends State<HomePage> {
         backgroundColor: Colors.green[400],
         title: Text('Bookmarks'),
       );
+    } else if (index == 3) {
+      return AppBar(
+        backgroundColor: Colors.green[400],
+        title: Text('About'),
+      );
     }
   }
 
   FloatingActionButton bookmarkButton(uiVariables) {
     if (dbInstance.allBookmarks != null) {
       isBookmarked = dbInstance.allBookmarks
-          .contains('${uiVariables?.currentUrl}!@${uiVariables?.title}');
+          .contains('${uiVariables?.currentUrl}!@${uiVariables?.title}') || dbInstance.allBookmarks
+          .contains('${uiVariables?.currentUrl}!@${uiVariables?.currentUrl}');
     }
     return FloatingActionButton(
       onPressed: () {
         if (isBookmarked) {
-          dbInstance.deleteBookmark(dbInstance.allBookmarks
-              .indexOf('${uiVariables.currentUrl}!@${uiVariables?.title}'));
+          print('#########@##@@@@@@@@@@@@@@');
+          int index;
+          if (dbInstance.allBookmarks
+              .indexOf('${uiVariables.currentUrl}!@${uiVariables?.title}') !=-1) {
+            index = dbInstance.allBookmarks
+                .indexOf('${uiVariables.currentUrl}!@${uiVariables?.title}');
+          } else {
+            index = dbInstance.allBookmarks
+                .indexOf('${uiVariables.currentUrl}!@${uiVariables?.currentUrl}');
+          }
+          dbInstance.deleteBookmark(index);
           setState(() {
             isBookmarked = false;
           });
@@ -90,14 +116,12 @@ class _HomePage extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final uiVariables = Provider.of<UiVariables>(context);
-    return FutureBuilder(
-        future: dbInstance.getBookmarks(),
-        initialData: [],
-        // ignore: missing_return
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            if (snapshot.data != []) {
-              print(snapshot.data);
+    return internetStatus
+        ? FutureBuilder(
+            future: dbInstance.getBookmarks(),
+            initialData: [],
+            // ignore: missing_return
+            builder: (context, snapshot) {
               return SafeArea(
                   child: Scaffold(
                       key: homeScreenKey,
@@ -108,19 +132,9 @@ class _HomePage extends State<HomePage> {
                               : Container(),
                       bottomNavigationBar:
                           bottom_bar.bottomNavigationBar(uiVariables, context),
-                      body: getScreen(uiVariables.bottomNavigationBarIndex)));
-            }
-          } else {
-            return SafeArea(
-                child: Scaffold(
-                    body: Center(
-              child: CircularProgressIndicator(
-                backgroundColor: Colors.black87,
-                strokeWidth: 1,
-              ),
-            )));
-          }
-        });
+                      body: getScreen(uiVariables)));
+            })
+        : NoInternet();
   }
 
   @override

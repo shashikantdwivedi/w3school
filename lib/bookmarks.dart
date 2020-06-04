@@ -7,16 +7,18 @@ import 'database.dart' as db;
 
 class Bookmarks extends StatefulWidget {
   db.Database dbInstance;
+  UiVariables uiVariables;
 
-  Bookmarks(this.dbInstance, {Key key}) : super(key: key);
+  Bookmarks(this.dbInstance, this.uiVariables, {Key key}) : super(key: key);
 
   @override
-  _BookmarksState createState() => _BookmarksState(dbInstance);
+  _BookmarksState createState() => _BookmarksState(dbInstance, uiVariables);
 }
 
 class _BookmarksState extends State<Bookmarks> {
-  _BookmarksState(this.dbInstance);
+  _BookmarksState(this.dbInstance, this.uiVariables);
 
+  UiVariables uiVariables;
   List values;
   List allBookmarks;
   db.Database dbInstance;
@@ -26,7 +28,7 @@ class _BookmarksState extends State<Bookmarks> {
     allBookmarks = dbInstance.allBookmarks;
   }
 
-  Dismissible bookmark(values, index) {
+  Dismissible bookmark(values, index, uiVariables) {
     return Dismissible(
         key: Key(index.toString()),
         direction: DismissDirection.endToStart,
@@ -59,7 +61,10 @@ class _BookmarksState extends State<Bookmarks> {
         },
         child: InkWell(
           splashColor: Colors.blue,
-          onTap: () {},
+          onTap: () {
+            uiVariables.setUrl(values[0]);
+            uiVariables.setBottomNavigationBarIndex(0);
+          },
           child: Ink(
             child: ListTile(
               leading: Text(index.toString()),
@@ -86,7 +91,6 @@ class _BookmarksState extends State<Bookmarks> {
 
   @override
   Widget build(BuildContext context) {
-    final uiVariables = Provider.of<UiVariables>(context);
     return ListView.separated(
         separatorBuilder: (BuildContext context, int index) {
           return Container(
@@ -99,7 +103,7 @@ class _BookmarksState extends State<Bookmarks> {
           print(allBookmarks);
           if (allBookmarks[index] != '') {
             values = allBookmarks[index].split('!@');
-            return bookmark(values, index);
+            return bookmark(values, index, uiVariables);
           }
           return Container();
         });

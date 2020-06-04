@@ -10,8 +10,6 @@ void bottomNavigationBarTap(uiVariables,currentIndex, context) {
     var searchButton = document.querySelector("[title='Search W3Schools']");
     searchButton.click();
     ''');
-  } else if (currentIndex == 2) {
-
   }
 
 }
@@ -36,10 +34,6 @@ BottomNavigationBar bottomNavigationBar(uiVariables, context) {
       BottomNavigationBarItem(
           icon: Icon(Icons.bookmark),
           title: Text('Bookmarks')
-      ),
-      BottomNavigationBarItem(
-          icon: Icon(Icons.settings),
-          title: Text('Settings')
       )
     ],
   );
