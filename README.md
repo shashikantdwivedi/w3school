@@ -57,7 +57,7 @@ This is the unofficial app for the most popular website to learn web development
 
 ## Contact
 
-Shashikant Dwivedi - [@ytheskd1999](https://twitter.com/theskd1999) - shashikant@shashikantdwivedi.com
+Shashikant Dwivedi - [@theskd1999](https://twitter.com/theskd1999) - shashikant@shashikantdwivedi.com
 
 Project Link: [w3schools](https://github.com/shashikantdwivedi/w3school)
 
